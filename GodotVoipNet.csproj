@@ -6,6 +6,9 @@
     <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="icon.png" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="addons\GodotVoipNet\icons\VoiceInstance.svg" />
     <None Include="addons\GodotVoipNet\icons\VoiceOrchestrator.svg" />
   </ItemGroup>

@@ -20,16 +20,16 @@ Example:
 ```csharp
 
 
-    private VoiceInstance _voiceInstance = null!;
+	private VoiceInstance _voiceInstance = null!;
 
 	public override void _Ready()
-    {
-        if (!IsMultiplayerAuthority()) { return; }
+	{
+		if (!IsMultiplayerAuthority()) { return; }
 
-        _voiceInstance = GetNode<VoiceInstance>("VoiceInstance");
+		_voiceInstance = GetNode<VoiceInstance>("VoiceInstance");
 
 		_voiceInstance.IsRecording = true;
-    }
+	}
 	
 ```
 
