@@ -1,7 +1,7 @@
 ﻿using Godot.Collections;
 using System;
 
-namespace Trouble.Audio;
+namespace GodotVoipNet;
 public class VoiceDataEventArgs : EventArgs
 {
     public Array<float> Data { get; }

@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 
 
-namespace Trouble.Audio;
+namespace GodotVoipNet;
 public partial class VoiceOrchestrator : Node
 {
     private int? _id = null;

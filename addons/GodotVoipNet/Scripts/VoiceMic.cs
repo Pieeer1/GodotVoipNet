@@ -1,6 +1,6 @@
 ﻿using Godot;
 
-namespace Trouble.Audio;
+namespace GodotVoipNet;
 public partial class VoiceMic : AudioStreamPlayer3D
 {
     public override void _Ready()
