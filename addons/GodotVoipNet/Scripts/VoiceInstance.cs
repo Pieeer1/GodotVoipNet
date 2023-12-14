@@ -3,7 +3,7 @@ using Godot.Collections;
 using System;
 using System.Linq;
 
-namespace Trouble.Audio;
+namespace GodotVoipNet;
 public partial class VoiceInstance : Node
 {
     private AudioStreamPlayer _voice = null!;
