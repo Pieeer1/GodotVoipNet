@@ -12,10 +12,11 @@ GodotVoipNet is a C# overhaul of the Godot Voip Library for Godot 4+
 (Multiplayer Peer is Required)
 
 1. Download the newest package and move it into the Godot Project.
-2. Enable the Project Audio Settings and enable Input
-3. Go to plugins and enable the plugin
-4. Add a voice instance to your player scene OR a Voice Orchestrator to the scene. (Must be instantiated AFTER the Multiplayer setup is completed)
-5. Get a reference to the instance and set `IsRecording = true`
+2. Select the addons/GodotVoipNet/ folder and move it into your Godot project. (Note: make sure the structure is still res://addons/GodotVoipNet/)
+3. Enable the Project Audio Settings and enable Input
+4. Go to plugins and enable the plugin
+5. Add a voice instance to your player scene OR a Voice Orchestrator to the scene. (Must be instantiated AFTER the Multiplayer setup is completed)
+6. Get a reference to the instance and set `IsRecording = true`
 Example: 
 ```csharp
 
