@@ -50,10 +50,10 @@ public partial class VoiceInstance : Node
 
         _voice.Stream = generator;
         _voice.Play();
-        GetTree().ProcessFrame += () => { _playback = _voice.GetStreamPlayback() as AudioStreamGeneratorPlayback; };
+        _playback = _voice.GetStreamPlayback() as AudioStreamGeneratorPlayback;
     }
 
-    [Rpc(CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Unreliable)]
+    [Rpc(CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void Speak(Array<float> data, int id)
     {
         if (_playback is null)
