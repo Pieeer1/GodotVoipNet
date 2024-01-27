@@ -40,13 +40,14 @@ public partial class VoiceInstance : Node
         _audioEffectCapture = (AudioEffectCapture)AudioServer.GetBusEffect(recordBusIdx, 0);
     }
 
-    private void CreateVoice()
+    private void CreateVoice(float mixRate)
     {
         _voice = new AudioStreamPlayer();
         AddChild(_voice);
 
         var generator = new AudioStreamGenerator();
         generator.BufferLength = 0.1f;
+        generator.MixRate = mixRate;
 
         _voice.Stream = generator;
         _voice.Play();
@@ -54,11 +55,11 @@ public partial class VoiceInstance : Node
     }
 
     [Rpc(CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void Speak(Array<float> data, int id)
+    public void Speak(Array<float> data, int id, float mixRate)
     {
         if (_playback is null)
         {
-            CreateVoice();
+            CreateVoice(mixRate);
         }
 
         ReceivedVoiceData?.Invoke(this, new VoiceDataEventArgs(data, id));
@@ -110,9 +111,9 @@ public partial class VoiceInstance : Node
                 }
                 if (ShouldListen)
                 {
-                    Speak(data, Multiplayer.GetUniqueId());
+                    Speak(data, Multiplayer.GetUniqueId(), AudioServer.GetMixRate());
                 }
-                Rpc(nameof(Speak), new Variant[] { data, Multiplayer.GetUniqueId() });
+                Rpc(nameof(Speak), new Variant[] { data, Multiplayer.GetUniqueId(), AudioServer.GetMixRate() });
                 SentVoiceData?.Invoke(this, new VoiceDataEventArgs(data, Multiplayer.GetUniqueId()));
             }
         }
