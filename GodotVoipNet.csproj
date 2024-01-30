@@ -1,4 +1,4 @@
-<Project Sdk="Godot.NET.Sdk/4.2.0">
+﻿<Project Sdk="Godot.NET.Sdk/4.2.0">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
@@ -10,5 +10,6 @@
   <ItemGroup>
     <None Include="Addons\GodotVoipNet\Icons\VoiceInstance.svg" />
     <None Include="Addons\GodotVoipNet\Icons\VoiceOrchestrator.svg" />
+    <None Include="Addons\GodotVoipNet\plugin.cfg" />
   </ItemGroup>
 </Project>
