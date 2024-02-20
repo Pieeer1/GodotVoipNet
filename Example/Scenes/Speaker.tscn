@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://s4dbmnklkyll"]
+
+[ext_resource type="Script" path="res://Example/Scenes/Speaker.cs" id="1_hbfay"]
+
+[node name="Speaker" type="Node3D"]
+script = ExtResource("1_hbfay")
