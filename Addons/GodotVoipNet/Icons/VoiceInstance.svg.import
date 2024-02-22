@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bwmrjh0023y1w"
-path="res://.godot/imported/VoiceInstance.svg-88ccae7100b459db941339af9d1d871a.ctex"
+path="res://.godot/imported/VoiceInstance.svg-2f8d0e7887a70388ded60d34900a9643.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Addons/GodotVoipNet/Icons/VoiceInstance.svg"
-dest_files=["res://.godot/imported/VoiceInstance.svg-88ccae7100b459db941339af9d1d871a.ctex"]
+source_file="res://addons/GodotVoipNet/Icons/VoiceInstance.svg"
+dest_files=["res://.godot/imported/VoiceInstance.svg-2f8d0e7887a70388ded60d34900a9643.ctex"]
 
 [params]
 
