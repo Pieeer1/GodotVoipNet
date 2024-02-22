@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://0w3xrenwsiko"]
+[gd_scene load_steps=3 format=3 uid="uid://0w3xrenwsiko"]
 
 [ext_resource type="Script" path="res://Example/Startup.cs" id="1_h1nye"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_aucuv"]
+font_size = 12
 
 [node name="Startup" type="Node3D"]
 script = ExtResource("1_h1nye")
@@ -41,6 +44,33 @@ text = "Leave"
 [node name="QuitButton" type="Button" parent="Control/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Quit"
+
+[node name="CheckboxContainer" type="HBoxContainer" parent="Control/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 25
+alignment = 1
+
+[node name="PushToTalkCheckbox" type="CheckBox" parent="Control/VBoxContainer/CheckboxContainer"]
+layout_mode = 2
+text = "Push To Talk"
+
+[node name="StereoCheckbox" type="CheckBox" parent="Control/VBoxContainer/CheckboxContainer"]
+layout_mode = 2
+text = "Stereo"
+
+[node name="TooltipLabel" type="Label" parent="Control/VBoxContainer"]
+layout_mode = 2
+text = "Hold V to transmit voice"
+label_settings = SubResource("LabelSettings_aucuv")
+horizontal_alignment = 1
+
+[node name="SpeakerContainer" type="HBoxContainer" parent="Control/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 25
+alignment = 1
+
+[node name="SpeakerHolder" type="VBoxContainer" parent="Control/VBoxContainer/SpeakerContainer"]
+layout_mode = 2
 
 [node name="SpeakerHolder" type="Node" parent="."]
 
