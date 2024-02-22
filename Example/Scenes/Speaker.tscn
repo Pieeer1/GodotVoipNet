@@ -1,6 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://s4dbmnklkyll"]
+[gd_scene load_steps=3 format=3 uid="uid://s4dbmnklkyll"]
 
 [ext_resource type="Script" path="res://Example/Scenes/Speaker.cs" id="1_hbfay"]
+[ext_resource type="Script" path="res://addons/GodotVoipNet/Scripts/VoiceInstance.cs" id="2_xby23"]
 
 [node name="Speaker" type="Node3D"]
 script = ExtResource("1_hbfay")
+
+[node name="VoiceInstance" type="Node" parent="."]
+script = ExtResource("2_xby23")

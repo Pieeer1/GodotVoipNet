@@ -41,7 +41,18 @@ public partial class Startup : Node3D
         _quitButton.Pressed += QuitButtonPressed;
 
         _stereoCheckbox.Toggled += (bool isPressed) => _isStereo = isPressed;
-        _pushToTalkCheckbox.Toggled += (bool isPressed) => _isPushToTalk = isPressed;
+        _pushToTalkCheckbox.Toggled += (bool isPressed) =>
+        {
+            _isPushToTalk = isPressed;
+            if (!_isPushToTalk)
+            {
+                _speakerHolder.GetChildren().Cast<Speaker>().Where(x => x.IsMultiplayerAuthority()).ToList().ForEach(x => x.StartSpeaking());
+            }
+            else
+            {
+                _speakerHolder.GetChildren().Cast<Speaker>().Where(x => x.IsMultiplayerAuthority()).ToList().ForEach(x => x.StopSpeaking());
+            }
+        };
     }
 
     public override void _Process(double delta)
