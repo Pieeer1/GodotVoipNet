@@ -1,10 +1,21 @@
-[gd_scene load_steps=3 format=3 uid="uid://s4dbmnklkyll"]
+[gd_scene load_steps=4 format=3 uid="uid://dcmsdvbnovsdp"]
 
 [ext_resource type="Script" path="res://Example/Scenes/Speaker.cs" id="1_hbfay"]
 [ext_resource type="Script" path="res://addons/GodotVoipNet/Scripts/VoiceInstance.cs" id="2_xby23"]
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_1yi0r"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
 [node name="Speaker" type="Node3D"]
 script = ExtResource("1_hbfay")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_1yi0r")
 
 [node name="VoiceInstance" type="Node" parent="."]
 script = ExtResource("2_xby23")

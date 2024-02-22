@@ -149,6 +149,7 @@ public partial class Startup : Node3D
     {
         Speaker speaker = _speakerScene.Instantiate<Speaker>();
         speaker.Name = $"{id}";
+        speaker.Position = Vector3.Zero;
         _speakerHolder.AddChild(speaker, true);
         Rpc(nameof(RefreshSpeakerList));
     }
