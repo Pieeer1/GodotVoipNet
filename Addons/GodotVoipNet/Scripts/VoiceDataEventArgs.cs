@@ -1,13 +1,14 @@
-﻿using Godot.Collections;
+﻿using Godot;
+using Godot.Collections;
 using System;
 
 namespace GodotVoipNet;
 public class VoiceDataEventArgs : EventArgs
 {
-    public Array<float> Data { get; }
+    public Array<Vector2> Data { get; }
     public int Id { get; }
 
-    public VoiceDataEventArgs(Array<float> data, int id)
+    public VoiceDataEventArgs(Array<Vector2> data, int id)
     {
         Data = data;
         Id = id;
