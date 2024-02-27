@@ -10,9 +10,10 @@ public partial class VoiceInstance : Node
     private VoiceMic _voiceMic = null!;
     private AudioEffectCapture _audioEffectCapture = null!;
     private AudioStreamGeneratorPlayback? _playback;
-    private Array<float> _receiveBuffer = new Array<float>();
+    private Vector2[] _receiveBuffer = [];
     private bool _previousFrameIsRecording = false;
-
+    [Export]
+    public bool IsStereo { get; set; } = false;
     [Export]
     public bool IsRecording { get; set; } = false;
     [Export]
@@ -55,7 +56,7 @@ public partial class VoiceInstance : Node
     }
 
     [Rpc(CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void Speak(Array<float> data, int id, float mixRate)
+    public void Speak(Array<Vector2> data, int id, float mixRate)
     {
         if (_playback is null)
         {
@@ -63,8 +64,7 @@ public partial class VoiceInstance : Node
         }
 
         ReceivedVoiceData?.Invoke(this, new VoiceDataEventArgs(data, id));
-
-        _receiveBuffer.AddRange(data);
+        _receiveBuffer = [.. _receiveBuffer, .. data];
     }
 
     private void ProcessVoice()
@@ -72,11 +72,8 @@ public partial class VoiceInstance : Node
         int framesAvailable = _playback?.GetFramesAvailable() ?? 0;
         if (framesAvailable < 1) { return; }
 
-        for (int i = 0; i < Math.Min(framesAvailable, _receiveBuffer.Count); i++)
-        {
-            _playback?.PushFrame(new Vector2(_receiveBuffer[0], _receiveBuffer[0]));
-            _receiveBuffer.RemoveAt(0);
-        }
+        _playback?.PushBuffer(_receiveBuffer);
+        _receiveBuffer = [];
     }
 
     private void ProcessMic()
@@ -94,7 +91,7 @@ public partial class VoiceInstance : Node
             Vector2[] stereoData = _audioEffectCapture?.GetBuffer(_audioEffectCapture.GetFramesAvailable()) ?? [];
             if (stereoData.Any())
             {
-                var data = new Array<float>();
+                var data = new Array<Vector2>();
                 data.Resize(stereoData.Length);
 
                 float maxValue = 0.0f;
@@ -103,7 +100,7 @@ public partial class VoiceInstance : Node
                 {
                     float value = (stereoData[i].X + stereoData[i].Y) / 2.0f;
                     maxValue = Math.Max(value, maxValue);
-                    data[i] = value;
+                    data[i] = IsStereo ? stereoData[i] : new Vector2(value, value);
                 }
                 if (maxValue < InputThreshold)
                 {
@@ -113,7 +110,7 @@ public partial class VoiceInstance : Node
                 {
                     Speak(data, Multiplayer.GetUniqueId(), AudioServer.GetMixRate());
                 }
-                Rpc(nameof(Speak), new Variant[] { data, Multiplayer.GetUniqueId(), AudioServer.GetMixRate() });
+                Rpc(nameof(Speak), [data, Multiplayer.GetUniqueId(), AudioServer.GetMixRate()]);
                 SentVoiceData?.Invoke(this, new VoiceDataEventArgs(data, Multiplayer.GetUniqueId()));
             }
         }
