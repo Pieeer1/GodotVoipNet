@@ -42,6 +42,7 @@ Example:
 | bool |  `IsRecording` |        If true, will transmit data to the other VoiceInstance instances. |
 | bool      |  `ShouldListen` |          If true, will play microphone data to the instance recording |
 | float      |  `InputThreshold` |    Value above which microhphone data will be sent. < 0 will disable       |
+| float      |  `IsStereo` |    If True, Audio will listen and send from the left and the right respectively       |
 
 ### VoiceOrchestrator 
 | Type         | Name | Description |
