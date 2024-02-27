@@ -17,6 +17,7 @@ GodotVoipNet is a C# overhaul of the Godot Voip Library for Godot 4+
 4. Go to plugins and enable the plugin
 5. Add a voice instance to your player scene OR a Voice Orchestrator to the scene. (Must be instantiated AFTER the Multiplayer setup is completed)
 6. Get a reference to the instance and set `IsRecording = true`
+7. (If there are issues, make sure you have a camera attached. See the example for a full minimal reproduceable sample)
 Example: 
 ```csharp
 
@@ -50,6 +51,7 @@ Example:
 | bool |  `IsRecording` |        If true, will transmit data to the other VoiceInstance instances. |
 | bool      |  `ShouldListen` |          If true, will play microphone data to the instance recording |
 | float      |  `InputThreshold` |    Value above which microhphone data will be sent. < 0 will disable       |
+| float      |  `IsStereo` |    If True, Audio will listen and send from the left and the right respectively       |
 # Credit
 Main Functionality is thanks to the algorithms created in this repository:
 	https://github.com/ikbencasdoei/godot-voip
