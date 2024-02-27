@@ -1,8 +1,7 @@
 using Godot;
 using GodotVoipNet;
-using System;
 
-public partial class Speaker : Node3D
+public partial class Speaker : CharacterBody3D
 {
     private VoiceInstance _voiceInstance = null!;
     public override void _EnterTree()

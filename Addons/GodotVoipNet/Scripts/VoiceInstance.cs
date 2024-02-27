@@ -91,7 +91,7 @@ public partial class VoiceInstance : Node
             {
                 _audioEffectCapture?.ClearBuffer();
             }
-            Vector2[] stereoData = _audioEffectCapture?.GetBuffer(_audioEffectCapture.GetFramesAvailable()) ?? new Vector2[0];
+            Vector2[] stereoData = _audioEffectCapture?.GetBuffer(_audioEffectCapture.GetFramesAvailable()) ?? [];
             if (stereoData.Any())
             {
                 var data = new Array<float>();

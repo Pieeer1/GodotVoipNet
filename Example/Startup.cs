@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Linq;
 
-public partial class Startup : Node3D
+public partial class Startup : Node
 {
     [Export]
     public int MaxPlayers { get; set; } = 4;
@@ -23,13 +23,14 @@ public partial class Startup : Node3D
     private bool _isInSession = false;
     private bool _isStereo = false;
     private bool _isPushToTalk = false;
+    private int _id = 0;
     public override void _Ready()
     {
         _hostButton = GetNode<Button>("Control/VBoxContainer/HBoxContainer/HostButton");
         _joinButton = GetNode<Button>("Control/VBoxContainer/HBoxContainer/JoinButton");
         _leaveButton = GetNode<Button>("Control/VBoxContainer/HBoxContainer/LeaveButton");
         _quitButton = GetNode<Button>("Control/VBoxContainer/HBoxContainer/QuitButton");
-        _speakerHolder = GetNode<Node>("SpeakerHolder");
+        _speakerHolder = GetNode<Node3D>("SpeakerHolder");
         _pushToTalkCheckbox = GetNode<CheckBox>("Control/VBoxContainer/CheckboxContainer/PushToTalkCheckbox");
         _stereoCheckbox = GetNode<CheckBox>("Control/VBoxContainer/CheckboxContainer/StereoCheckbox");
         _tooltipLabel = GetNode<Label>("Control/VBoxContainer/TooltipLabel");
@@ -46,18 +47,32 @@ public partial class Startup : Node3D
             _isPushToTalk = isPressed;
             if (!_isPushToTalk)
             {
-                _speakerHolder.GetChildren().Cast<Speaker>().Where(x => x.IsMultiplayerAuthority()).ToList().ForEach(x => x.StartSpeaking());
+                _speakerHolder.GetChildren().Cast<Speaker>().First(x => x.Name == $"{_id}").StartSpeaking();
             }
             else
             {
-                _speakerHolder.GetChildren().Cast<Speaker>().Where(x => x.IsMultiplayerAuthority()).ToList().ForEach(x => x.StopSpeaking());
+                _speakerHolder.GetChildren().Cast<Speaker>().FirstOrDefault(x => x.Name == $"{_id}")?.StopSpeaking();
             }
         };
+        //set defaults programatically for now
+        _pushToTalkCheckbox.ButtonPressed = true;
+        _isPushToTalk = true;
     }
 
     public override void _Process(double delta)
     {
-        HandleButtonAvailability();    
+        HandleButtonAvailability();
+        if (_isPushToTalk)
+        {
+            if (Input.IsActionPressed("voice_input"))
+            {
+                _speakerHolder.GetChildren().Cast<Speaker>().FirstOrDefault(x => x.Name == $"{_id}")?.StartSpeaking();
+            }
+            else
+            {
+                _speakerHolder.GetChildren().Cast<Speaker>().FirstOrDefault(x => x.Name == $"{_id}")?.StopSpeaking();
+            }
+        }
     }
 
     [Rpc(CallLocal = true)]
@@ -82,6 +97,14 @@ public partial class Startup : Node3D
             Label label = new Label();
             label.Text = $"Speaker {speaker.Name}";
             _speakerUIHolder.AddChild(label);
+        }
+    }
+    [Rpc]
+    public void SetId(int id)
+    {
+        if (_id == 0)
+        {
+            _id = id;
         }
     }
     private void HandleButtonAvailability()
@@ -141,7 +164,7 @@ public partial class Startup : Node3D
 
         Multiplayer.PeerConnected += AddPlayer;
         Multiplayer.PeerDisconnected += RemovePlayer;
-
+        _id = 1;
         AddPlayer(1); // multiplayer always starts with id of 1
     }
 
@@ -152,6 +175,7 @@ public partial class Startup : Node3D
         speaker.Position = Vector3.Zero;
         _speakerHolder.AddChild(speaker, true);
         Rpc(nameof(RefreshSpeakerList));
+        Rpc(nameof(SetId), id);
     }
     private void RemovePlayer(long id) 
     {

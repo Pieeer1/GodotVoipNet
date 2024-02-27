@@ -5,7 +5,7 @@
 [sub_resource type="LabelSettings" id="LabelSettings_aucuv"]
 font_size = 12
 
-[node name="Startup" type="Node3D"]
+[node name="Startup" type="Node"]
 script = ExtResource("1_h1nye")
 
 [node name="Control" type="Control" parent="."]
@@ -72,8 +72,8 @@ alignment = 1
 [node name="SpeakerHolder" type="VBoxContainer" parent="Control/VBoxContainer/SpeakerContainer"]
 layout_mode = 2
 
-[node name="SpeakerHolder" type="Node" parent="."]
-
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://Example/Scenes/Speaker.tscn")
 spawn_path = NodePath("../SpeakerHolder")
+
+[node name="SpeakerHolder" type="Node3D" parent="."]
