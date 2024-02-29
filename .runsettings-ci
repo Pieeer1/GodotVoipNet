@@ -6,9 +6,6 @@
         <TargetFrameworkVersion>net8.0</TargetFrameworkVersion>
         <TestSessionTimeout>180000</TestSessionTimeout>
         <TreatNoTestsAsError>true</TreatNoTestsAsError>
-        <EnvironmentVariables>
-            <GODOT_BIN>/root/.local/share/godot/templates/4.2.1.stable.mono</GODOT_BIN>
-        </EnvironmentVariables>
     </RunConfiguration>
 
     <LoggerRunSettings>
@@ -30,6 +27,17 @@
             </Logger>
         </Loggers>
     </LoggerRunSettings>
+
+    <DataCollectionRunSettings>
+        <DataCollectors>
+            <DataCollector friendlyName="blame" enabled="True">
+                <Configuration>
+                    <CollectDump DumpType="Full" />
+                    <CollectDumpOnTestSessionHang TestTimeout="10min" HangDumpType="Full" />
+                </Configuration>
+            </DataCollector>
+        </DataCollectors>
+    </DataCollectionRunSettings>
 
     <GdUnit4>
         <Parameters>--audio-driver Dummy --display-driver x11 --rendering-driver opengl3 --screen 0 --verbose</Parameters>
