@@ -19,6 +19,7 @@ public partial class Startup : Node
     private Node _speakerHolder = null!;
     private CheckBox _pushToTalkCheckbox = null!;
     private CheckBox _stereoCheckbox = null!;
+    private CheckBox _positionalAudioCheckbox = null!;
     private Label _tooltipLabel = null!;
     private VBoxContainer _speakerUIHolder = null!;
     private bool _isInSession = false;
@@ -34,6 +35,7 @@ public partial class Startup : Node
         _speakerHolder = GetNode<Node3D>("SpeakerHolder");
         _pushToTalkCheckbox = GetNode<CheckBox>("Control/VBoxContainer/CheckboxContainer/PushToTalkCheckbox");
         _stereoCheckbox = GetNode<CheckBox>("Control/VBoxContainer/CheckboxContainer/StereoCheckbox");
+        _positionalAudioCheckbox = GetNode<CheckBox>("Control/VBoxContainer/CheckboxContainer/PositionalAudioCheckbox");
         _tooltipLabel = GetNode<Label>("Control/VBoxContainer/TooltipLabel");
         _speakerUIHolder = GetNode<VBoxContainer>("Control/VBoxContainer/SpeakerContainer/SpeakerHolder");
 
@@ -53,6 +55,14 @@ public partial class Startup : Node
             else
             {
                 _speakerHolder.GetChildren().Cast<Speaker>().FirstOrDefault(x => x.Name == $"{_id}")?.StopSpeaking();
+            }
+        };
+        _positionalAudioCheckbox.Toggled += (bool isPressed) =>
+        {
+            _speakerHolder.GetChildren().Cast<Speaker>().First(x => x.Name == $"{_id}").SetIsPositional(isPressed);
+            foreach (var vector3Display in _speakerUIHolder.GetChildren().SelectMany(x => x.GetChildren()).Where(x => x is Vector3Display).Cast<Vector3Display>())
+            {
+                vector3Display.IsEnabled = isPressed;
             }
         };
         //set defaults programatically for now

@@ -58,6 +58,10 @@ text = "Push To Talk"
 layout_mode = 2
 text = "Stereo"
 
+[node name="PositionalAudioCheckbox" type="CheckBox" parent="Control/VBoxContainer/CheckboxContainer"]
+layout_mode = 2
+text = "Positional Audio"
+
 [node name="TooltipLabel" type="Label" parent="Control/VBoxContainer"]
 layout_mode = 2
 text = "Hold V to transmit voice"

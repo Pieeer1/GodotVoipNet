@@ -1,17 +1,24 @@
-﻿using Godot;
-using Godot.Collections;
+﻿using Godot.Collections;
 using System;
 using System.Linq;
 
 namespace GodotVoipNet;
 public partial class VoiceInstance : Node
 {
-    private AudioStreamPlayer _voice = null!;
     private VoiceMic _voiceMic = null!;
     private AudioEffectCapture _audioEffectCapture = null!;
     private AudioStreamGeneratorPlayback? _playback;
     private Vector2[] _receiveBuffer = [];
     private bool _previousFrameIsRecording = false;
+
+    private bool _isPositional = false;
+    [Export]
+    public bool IsPositional { get => _isPositional; set 
+        {
+            _isPositional = value;
+            CreateVoice(AudioServer.GetMixRate(), value);
+        } 
+    }
     [Export]
     public bool IsStereo { get; set; } = false;
     [Export]
@@ -23,6 +30,11 @@ public partial class VoiceInstance : Node
 
     public event EventHandler<VoiceDataEventArgs>? ReceivedVoiceData;
     public event EventHandler<VoiceDataEventArgs>? SentVoiceData;
+
+    public override void _Ready()
+    {
+        CreateVoice(AudioServer.GetMixRate(), IsPositional);
+    }
 
     public override void _Process(double delta)
     {
@@ -41,28 +53,54 @@ public partial class VoiceInstance : Node
         _audioEffectCapture = (AudioEffectCapture)AudioServer.GetBusEffect(recordBusIdx, 0);
     }
 
-    private void CreateVoice(float mixRate)
+    private void CreateVoice(float mixRate, bool isPositional)
     {
-        _voice = new AudioStreamPlayer();
-        AddChild(_voice);
-
         var generator = new AudioStreamGenerator();
         generator.BufferLength = 0.1f;
         generator.MixRate = mixRate;
 
-        _voice.Stream = generator;
-        _voice.Play();
-        _playback = _voice.GetStreamPlayback() as AudioStreamGeneratorPlayback;
+        if(isPositional)
+        {
+            SwitchToPositional(generator);
+        }
+        else
+        {
+            SwitchToNonPositional(generator);
+        }
+    }
+
+    private void SwitchToNonPositional(AudioStreamGenerator audioStreamGenerator)
+    {
+        GetNodeOrNull("AudioStreamPlayer")?.Free();
+
+        AudioStreamPlayer audioStreamPlayer = new AudioStreamPlayer();
+
+        audioStreamPlayer.Name = "AudioStreamPlayer";
+
+        AddChild(audioStreamPlayer);
+
+        audioStreamPlayer.Stream = audioStreamGenerator;
+        audioStreamPlayer.Play();
+        _playback = audioStreamPlayer.GetStreamPlayback() as AudioStreamGeneratorPlayback;
+    }
+    private void SwitchToPositional(AudioStreamGenerator audioStreamGenerator)
+    {
+        GetNodeOrNull("AudioStreamPlayer")?.Free();
+
+        AudioStreamPlayer3D audioStreamPlayer = new AudioStreamPlayer3D();
+
+        audioStreamPlayer.Name = "AudioStreamPlayer";
+
+        AddChild(audioStreamPlayer);
+
+        audioStreamPlayer.Stream = audioStreamGenerator;
+        audioStreamPlayer.Play();
+        _playback = audioStreamPlayer.GetStreamPlayback() as AudioStreamGeneratorPlayback;
     }
 
     [Rpc(CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void Speak(Array<Vector2> data, int id, float mixRate)
+    public void Speak(Array<Vector2> data, int id)
     {
-        if (_playback is null)
-        {
-            CreateVoice(mixRate);
-        }
-
         ReceivedVoiceData?.Invoke(this, new VoiceDataEventArgs(data, id));
         _receiveBuffer = [.. _receiveBuffer, .. data];
     }
@@ -108,9 +146,9 @@ public partial class VoiceInstance : Node
                 }
                 if (ShouldListen)
                 {
-                    Speak(data, Multiplayer.GetUniqueId(), AudioServer.GetMixRate());
+                    Speak(data, Multiplayer.GetUniqueId());
                 }
-                Rpc(nameof(Speak), [data, Multiplayer.GetUniqueId(), AudioServer.GetMixRate()]);
+                Rpc(nameof(Speak), [data, Multiplayer.GetUniqueId()]);
                 SentVoiceData?.Invoke(this, new VoiceDataEventArgs(data, Multiplayer.GetUniqueId()));
             }
         }

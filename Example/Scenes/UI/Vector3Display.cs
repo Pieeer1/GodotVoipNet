@@ -7,13 +7,13 @@ public partial class Vector3Display : Control
 {
     public int PlayerId { get; set; }
     public Node PlayerHolder { get; set; } = null!;
+    public bool IsEnabled { get; set; }
 
     private LineEdit _xEdit = null!;
     private LineEdit _yEdit = null!;
     private LineEdit _zEdit = null!;
 
     private Label _label = null!;
-
     public override void _Ready()
     {
         _xEdit = GetNode<LineEdit>("XEdit");
@@ -68,11 +68,14 @@ public partial class Vector3Display : Control
             }
         };
     }
-
+    public override void _Process(double delta)
+    {
+        _xEdit.Editable = IsEnabled;
+        _yEdit.Editable = IsEnabled;
+        _zEdit.Editable = IsEnabled;
+    }
     public void UpdateChatLabel(string text)
     {
         _label.Text = text;
     }
-
-
 }
