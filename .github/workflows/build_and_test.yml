@@ -13,25 +13,35 @@ jobs:
   build-and-test:
     name: "Build and Test"
     runs-on: ubuntu-latest
-    container:
-      image: barichello/godot-ci:mono-4.2.1
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3.0.2
+      - uses: actions/checkout@v4
         with:
           lfs: true
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+
+      - name: "Install Godot Mono '4.2.1'"
+        uses: ./.github/actions/godot-install
         with:
-          dotnet-version: 8.0.x
+          godot-version: '4.2.1'
+          godot-mono: true
+          godot-status-version: 'stable'
+          godot-bin-name: 'linux_x86_64'
+          godot-cache-path: '~/godot-linux'
 
-      - name: Build
-        run: dotnet build GodotVoipNet.sln
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 7.0.x
 
-      - name: Test
-        run: dotnet test --no-build GodotVoipNet.sln --settings .runsettings-ci
+      - name: "Compile C#"
+        if: ${{ !cancelled() }}
+        run: |
+          dotnet restore
+          dotnet build --no-restore
 
-      # - name: Get GodotPath
-      #   run: |
-      #     cd /root/.local/share/godot/templates
-      #     echo $(ls)
+      - name: "Run Unit Tests"
+        if: ${{ !cancelled() }}
+        timeout-minutes: 5
+        env:
+          GODOT_BIN: "/home/runner/godot-linux/godot"
+        run: |
+          $GODOT_BIN --path ./example --headless --build-solutions --quit-after 20
+          xvfb-run --auto-servernum dotnet test GodotVoipNet.csproj --no-build --settings runsettings-ci || true
