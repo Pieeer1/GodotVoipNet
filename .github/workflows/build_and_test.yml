@@ -29,7 +29,7 @@ jobs:
       #   run: dotnet build GodotVoipNet.sln
 
       - name: Test
-        run: dotnet test GodotVoipNet.sln UseShellExecute
+        run: dotnet test GodotVoipNet.sln
 
       # - name: Get GodotPath
       #   run: |
