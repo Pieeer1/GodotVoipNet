@@ -2,7 +2,7 @@ name: .NET Build and Godot Test
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "automated-pipeline-testing" ]
   pull_request:
     branches: [ "main" ]
 
