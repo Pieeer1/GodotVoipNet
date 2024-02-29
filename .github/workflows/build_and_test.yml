@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 env:
-  GODOT_BIN: '/root/.local/share/godot/templates/4.2.1.stable.mono ~/.local/share/godot/export_templates/4.2.1.stable.mono'
+  GODOT_BIN: '/root/.local/share/godot/templates/4.2.1.stable.mono'
 
 jobs:
   build-and-test:
