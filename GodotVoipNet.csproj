@@ -8,13 +8,11 @@
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="runsettings-ci" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="icon.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".runsettings" />
+    <None Include=".runsettings-ci" />
     <None Include="Addons\GodotVoipNet\Icons\VoiceInstance.svg" />
     <None Include="Addons\GodotVoipNet\Icons\VoiceOrchestrator.svg" />
     <None Include="Addons\GodotVoipNet\plugin.cfg" />
