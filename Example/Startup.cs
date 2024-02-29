@@ -10,6 +10,7 @@ public partial class Startup : Node
     public int ServerPort { get; set; } = 1234;
 
     private readonly PackedScene _speakerScene = ResourceLoader.Load<PackedScene>("res://Example/Scenes/Speaker.tscn");
+    private readonly PackedScene _vector3DisplayScene = ResourceLoader.Load<PackedScene>("res://Example/Scenes/UI/Vector3Display.tscn");
 
     private Button _hostButton = null!;
     private Button _joinButton = null!;
@@ -82,9 +83,7 @@ public partial class Startup : Node
 
         foreach (Node speaker in _speakerHolder.GetChildren().Where(x => x.Name != id.ToString()))
         {
-            Label label = new Label();
-            label.Text = $"Speaker {speaker.Name}";
-            _speakerUIHolder.AddChild(label);
+            CreateNewLabels(speaker);
         }
     }
     [Rpc(CallLocal = true)]
@@ -94,11 +93,34 @@ public partial class Startup : Node
 
         foreach (Node speaker in _speakerHolder.GetChildren())
         {
-            Label label = new Label();
-            label.Text = $"Speaker {speaker.Name}";
-            _speakerUIHolder.AddChild(label);
+            CreateNewLabels(speaker);
         }
     }
+
+
+    private void CreateNewLabels(Node speaker)
+    {
+        HBoxContainer hBoxContainer = new HBoxContainer();
+        Label label = new Label();
+        label.Text = $"Speaker {speaker.Name}";
+        hBoxContainer.AddChild(label);
+
+        if (_id == int.Parse(speaker.Name))
+        {
+            Vector3Display locationSetup = _vector3DisplayScene.Instantiate<Vector3Display>();
+            locationSetup.PlayerId = int.Parse(speaker.Name);
+            locationSetup.PlayerHolder = _speakerHolder;
+            hBoxContainer.AddChild(locationSetup);
+            _speakerUIHolder.AddChild(hBoxContainer);
+            locationSetup.UpdateChatLabel("Location: ");
+        }
+        else
+        {
+            _speakerUIHolder.AddChild(hBoxContainer);
+        }
+
+    }
+
     [Rpc]
     public void SetId(int id)
     {
@@ -174,8 +196,8 @@ public partial class Startup : Node
         speaker.Name = $"{id}";
         speaker.Position = Vector3.Zero;
         _speakerHolder.AddChild(speaker, true);
-        Rpc(nameof(RefreshSpeakerList));
         Rpc(nameof(SetId), id);
+        Rpc(nameof(RefreshSpeakerList));
     }
     private void RemovePlayer(long id) 
     {
