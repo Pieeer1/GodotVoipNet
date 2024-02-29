@@ -1,5 +1,5 @@
 # GodotVoipNet
-GodotVoipNet is a C# overhaul of the Godot Voip Library for Godot 4+ 
+GodotVoipNet is a .NET 8 overhaul of the Godot Voip Library for Godot 4+ 
 
 # Engine Compatability
 
@@ -52,7 +52,13 @@ Example:
 | bool      |  `ShouldListen` |          If true, will play microphone data to the instance recording |
 | float      |  `InputThreshold` |    Value above which microhphone data will be sent. < 0 will disable       |
 | float      |  `IsStereo` |    If True, Audio will listen and send from the left and the right respectively       |
-# Credit
-Main Functionality is thanks to the algorithms created in this repository:
-	https://github.com/ikbencasdoei/godot-voip
-	
+
+# Contributing
+
+If you would like to contribute, please feel free to submit a pull request.
+There are some essential elements that are required for immediate running of the project.
+1. The Location of you Godot Engine EXE (For the build and test process) must be at `C:\Program Files (x86)\Godot\Godot_v4.2.1-stable_mono_win64\Godot_v4.2.1-stable_mono_win64.exe`
+2. If you are using a different location, you will need to update the following:
+- Properties/launchSettings.json path
+- .runsettings path (for tests)
+3. The project is built using Visual Studio 2022. Visual Studio Code is not supported at this time.
