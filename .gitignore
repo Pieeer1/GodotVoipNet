@@ -399,3 +399,5 @@ FodyWeavers.xsd
 
 #Godot
 .godot
+
+gdunit4_testadapter/
