@@ -28,5 +28,5 @@ jobs:
 
       - name: Get GodotPath
         run: |
-          cd /root/.local/share/godot
+          cd /root/.local/share/godot/templates
           echo $(ls)
