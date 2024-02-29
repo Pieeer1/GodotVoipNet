@@ -43,5 +43,5 @@ jobs:
         env:
           GODOT_BIN: "/home/runner/godot-linux/godot"
         run: |
-          $GODOT_BIN --path ./example --headless --build-solutions --quit-after 20
+          $GODOT_BIN --headless --build-solutions --quit-after 20
           xvfb-run --auto-servernum dotnet test GodotVoipNet.csproj --no-build --settings runsettings-ci || true
