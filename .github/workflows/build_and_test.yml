@@ -26,14 +26,11 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
-      - name: Restore
-        run: dotnet restore
-
       - name: Build
-        run: dotnet build --no-restore --configuration Release
+        run: dotnet build --configuration Release GodotVoipNet.sln
 
       - name: Test
-        run: dotnet test --no-build --configuration Release
+        run: dotnet test --no-build --configuration Release GodotVoipNet.sln
 
       # - name: Get GodotPath
       #   run: |
