@@ -8,6 +8,9 @@
       "executablePath": "C:\\Program Files (x86)\\Godot\\Godot_v4.2.1-stable_mono_win64\\Godot_v4.2.1-stable_mono_win64.exe",
       "commandLineArgs": "--path. --verbose",
       "workingDirectory": ".",
+      "environmentVariables": {
+        "GODOT_BIN": "C:\\Program Files (x86)\\Godot\\Godot_v4.2.1-stable_mono_win64\\Godot_v4.2.1-stable_mono_win64.exe"
+      },
       "nativeDebugging": true
     },
     "GodotVoipNet Console": {
@@ -15,6 +18,9 @@
       "executablePath": "C:\\Program Files (x86)\\Godot\\Godot_v4.2.1-stable_mono_win64\\Godot_v4.2.1-stable_mono_win64_console.exe",
       "commandLineArgs": "--path. --verbose",
       "workingDirectory": ".",
+      "environmentVariables": {
+        "GODOT_BIN": "C:\\Program Files (x86)\\Godot\\Godot_v4.2.1-stable_mono_win64\\Godot_v4.2.1-stable_mono_win64.exe"
+      },
       "nativeDebugging": true
     }
   }
