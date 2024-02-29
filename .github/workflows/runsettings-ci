@@ -32,7 +32,7 @@
     </LoggerRunSettings>
 
     <GdUnit4>
-        <Parameters></Parameters>
+        <Parameters>--audio-driver Dummy --display-driver x11 --rendering-driver opengl3 --screen 0 --verbose</Parameters>
         <DisplayName>FullyQualifiedName</DisplayName>
     </GdUnit4>
 </RunSettings>
