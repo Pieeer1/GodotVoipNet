@@ -8,6 +8,9 @@
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="runsettings-ci" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="icon.png" />
   </ItemGroup>
   <ItemGroup>
