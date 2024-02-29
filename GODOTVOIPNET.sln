@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GodotVoipNet", "GodotVoipNe
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B7D9B63D-3B2B-4C47-B3F1-73336CF2662A}"
 	ProjectSection(SolutionItems) = preProject
-		.github\actions\action.yml = .github\actions\action.yml
+		.github\actions\godot-install\action.yml = .github\actions\godot-install\action.yml
 		.github\workflows\build_and_test.yml = .github\workflows\build_and_test.yml
 	EndProjectSection
 EndProject
