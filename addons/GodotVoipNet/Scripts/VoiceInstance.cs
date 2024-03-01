@@ -5,19 +5,23 @@ using System.Linq;
 namespace GodotVoipNet;
 public partial class VoiceInstance : Node
 {
-    private VoiceMic _voiceMic = null!;
+    private VoiceMic? _voiceMic;
     private AudioEffectCapture _audioEffectCapture = null!;
     private AudioStreamGeneratorPlayback? _playback;
     private Vector2[] _receiveBuffer = [];
     private bool _previousFrameIsRecording = false;
 
+    private AudioStreamPlayer3D? _audioStreamPlayer3D;
+
     private bool _isPositional = false;
     [Export]
-    public bool IsPositional { get => _isPositional; set 
+    public bool IsPositional
+    {
+        get => _isPositional; set
         {
             _isPositional = value;
             CreateVoice(AudioServer.GetMixRate(), value);
-        } 
+        }
     }
     [Export]
     public bool IsStereo { get; set; } = false;
@@ -43,10 +47,14 @@ public partial class VoiceInstance : Node
             ProcessVoice();
         }
         ProcessMic();
+        if (_voiceMic is not null)
+        {
+            _voiceMic.GlobalPosition = GetParent<Node3D>().GlobalPosition;
+        }
     }
 
     private void CreateMic()
-    { 
+    {
         _voiceMic = new VoiceMic();
         AddChild(_voiceMic);
         int recordBusIdx = AudioServer.GetBusIndex(_voiceMic.Bus);
@@ -59,7 +67,7 @@ public partial class VoiceInstance : Node
         generator.BufferLength = 0.1f;
         generator.MixRate = mixRate;
 
-        if(isPositional)
+        if (isPositional)
         {
             SwitchToPositional(generator);
         }
@@ -71,6 +79,7 @@ public partial class VoiceInstance : Node
 
     private void SwitchToNonPositional(AudioStreamGenerator audioStreamGenerator)
     {
+        _audioStreamPlayer3D = null;
         GetNodeOrNull("AudioStreamPlayer")?.Free();
 
         AudioStreamPlayer audioStreamPlayer = new AudioStreamPlayer();
@@ -87,20 +96,23 @@ public partial class VoiceInstance : Node
     {
         GetNodeOrNull("AudioStreamPlayer")?.Free();
 
-        AudioStreamPlayer3D audioStreamPlayer = new AudioStreamPlayer3D();
+        _audioStreamPlayer3D = new AudioStreamPlayer3D();
+        _audioStreamPlayer3D.Name = "AudioStreamPlayer";
 
-        audioStreamPlayer.Name = "AudioStreamPlayer";
+        AddChild(_audioStreamPlayer3D);
 
-        AddChild(audioStreamPlayer);
-
-        audioStreamPlayer.Stream = audioStreamGenerator;
-        audioStreamPlayer.Play();
-        _playback = audioStreamPlayer.GetStreamPlayback() as AudioStreamGeneratorPlayback;
+        _audioStreamPlayer3D.Stream = audioStreamGenerator;
+        _audioStreamPlayer3D.Play();
+        _playback = _audioStreamPlayer3D.GetStreamPlayback() as AudioStreamGeneratorPlayback;
     }
 
     [Rpc(CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void Speak(Array<Vector2> data, int id)
+    public void Speak(Array<Vector2> data, int id, Vector3 position)
     {
+        if (_audioStreamPlayer3D is not null)
+        {
+            _audioStreamPlayer3D.GlobalPosition = position;
+        }
         ReceivedVoiceData?.Invoke(this, new VoiceDataEventArgs(data, id));
         _receiveBuffer = [.. _receiveBuffer, .. data];
     }
@@ -122,7 +134,7 @@ public partial class VoiceInstance : Node
             {
                 CreateMic();
             }
-            if(!_previousFrameIsRecording)
+            if (!_previousFrameIsRecording)
             {
                 _audioEffectCapture?.ClearBuffer();
             }
@@ -146,9 +158,9 @@ public partial class VoiceInstance : Node
                 }
                 if (ShouldListen)
                 {
-                    Speak(data, Multiplayer.GetUniqueId());
+                    Speak(data, Multiplayer.GetUniqueId(), GetParent<Node3D>().GlobalPosition);
                 }
-                Rpc(nameof(Speak), [data, Multiplayer.GetUniqueId()]);
+                Rpc(nameof(Speak), [data, Multiplayer.GetUniqueId(), GetParent<Node3D>().GlobalPosition]);
                 SentVoiceData?.Invoke(this, new VoiceDataEventArgs(data, Multiplayer.GetUniqueId()));
             }
         }

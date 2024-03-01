@@ -146,6 +146,7 @@ public partial class Startup : Node
         _hostButton.Disabled = _isInSession;
         _pushToTalkCheckbox.Disabled = !_isInSession;
         _stereoCheckbox.Disabled = !_isInSession;
+        _positionalAudioCheckbox.Disabled = !_isInSession;
         _tooltipLabel.Visible = _isInSession && _isPushToTalk;
     }
 
