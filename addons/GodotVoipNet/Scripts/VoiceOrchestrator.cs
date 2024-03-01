@@ -10,6 +10,8 @@ public partial class VoiceOrchestrator : Node
     private int? _id = null;
     private Dictionary<int, VoiceInstance> _instances = new Dictionary<int, VoiceInstance>();
     [Export]
+    public bool IsPositional { get; set; } = false;
+    [Export]
     public bool IsStereo { get; set; } = false;
     [Export]
     public bool IsRecording { get; set; } = false;
@@ -61,6 +63,7 @@ public partial class VoiceOrchestrator : Node
             instance.IsRecording = IsRecording;
             instance.ShouldListen = ShouldListen;
             instance.InputThreshold = InputThreshold;
+            instance.IsPositional = IsPositional;
 
             instance.SentVoiceData += (o, e) => SentVoiceData?.Invoke(this, e);
 

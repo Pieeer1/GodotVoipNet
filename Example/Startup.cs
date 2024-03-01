@@ -10,6 +10,7 @@ public partial class Startup : Node
     public int ServerPort { get; set; } = 1234;
 
     private readonly PackedScene _speakerScene = ResourceLoader.Load<PackedScene>("res://Example/Scenes/Speaker.tscn");
+    private readonly PackedScene _vector3DisplayScene = ResourceLoader.Load<PackedScene>("res://Example/Scenes/UI/Vector3Display.tscn");
 
     private Button _hostButton = null!;
     private Button _joinButton = null!;
@@ -18,6 +19,7 @@ public partial class Startup : Node
     private Node _speakerHolder = null!;
     private CheckBox _pushToTalkCheckbox = null!;
     private CheckBox _stereoCheckbox = null!;
+    private CheckBox _positionalAudioCheckbox = null!;
     private Label _tooltipLabel = null!;
     private VBoxContainer _speakerUIHolder = null!;
     private bool _isInSession = false;
@@ -33,6 +35,7 @@ public partial class Startup : Node
         _speakerHolder = GetNode<Node3D>("SpeakerHolder");
         _pushToTalkCheckbox = GetNode<CheckBox>("Control/VBoxContainer/CheckboxContainer/PushToTalkCheckbox");
         _stereoCheckbox = GetNode<CheckBox>("Control/VBoxContainer/CheckboxContainer/StereoCheckbox");
+        _positionalAudioCheckbox = GetNode<CheckBox>("Control/VBoxContainer/CheckboxContainer/PositionalAudioCheckbox");
         _tooltipLabel = GetNode<Label>("Control/VBoxContainer/TooltipLabel");
         _speakerUIHolder = GetNode<VBoxContainer>("Control/VBoxContainer/SpeakerContainer/SpeakerHolder");
 
@@ -52,6 +55,14 @@ public partial class Startup : Node
             else
             {
                 _speakerHolder.GetChildren().Cast<Speaker>().FirstOrDefault(x => x.Name == $"{_id}")?.StopSpeaking();
+            }
+        };
+        _positionalAudioCheckbox.Toggled += (bool isPressed) =>
+        {
+            _speakerHolder.GetChildren().Cast<Speaker>().First(x => x.Name == $"{_id}").SetIsPositional(isPressed);
+            foreach (var vector3Display in _speakerUIHolder.GetChildren().SelectMany(x => x.GetChildren()).Where(x => x is Vector3Display).Cast<Vector3Display>())
+            {
+                vector3Display.IsEnabled = isPressed;
             }
         };
         //set defaults programatically for now
@@ -82,9 +93,7 @@ public partial class Startup : Node
 
         foreach (Node speaker in _speakerHolder.GetChildren().Where(x => x.Name != id.ToString()))
         {
-            Label label = new Label();
-            label.Text = $"Speaker {speaker.Name}";
-            _speakerUIHolder.AddChild(label);
+            CreateNewLabels(speaker);
         }
     }
     [Rpc(CallLocal = true)]
@@ -94,11 +103,34 @@ public partial class Startup : Node
 
         foreach (Node speaker in _speakerHolder.GetChildren())
         {
-            Label label = new Label();
-            label.Text = $"Speaker {speaker.Name}";
-            _speakerUIHolder.AddChild(label);
+            CreateNewLabels(speaker);
         }
     }
+
+
+    private void CreateNewLabels(Node speaker)
+    {
+        HBoxContainer hBoxContainer = new HBoxContainer();
+        Label label = new Label();
+        label.Text = $"Speaker {speaker.Name}";
+        hBoxContainer.AddChild(label);
+
+        if (_id == int.Parse(speaker.Name))
+        {
+            Vector3Display locationSetup = _vector3DisplayScene.Instantiate<Vector3Display>();
+            locationSetup.PlayerId = int.Parse(speaker.Name);
+            locationSetup.PlayerHolder = _speakerHolder;
+            hBoxContainer.AddChild(locationSetup);
+            _speakerUIHolder.AddChild(hBoxContainer);
+            locationSetup.UpdateChatLabel("Location: ");
+        }
+        else
+        {
+            _speakerUIHolder.AddChild(hBoxContainer);
+        }
+
+    }
+
     [Rpc]
     public void SetId(int id)
     {
@@ -114,6 +146,7 @@ public partial class Startup : Node
         _hostButton.Disabled = _isInSession;
         _pushToTalkCheckbox.Disabled = !_isInSession;
         _stereoCheckbox.Disabled = !_isInSession;
+        _positionalAudioCheckbox.Disabled = !_isInSession;
         _tooltipLabel.Visible = _isInSession && _isPushToTalk;
     }
 
@@ -174,8 +207,8 @@ public partial class Startup : Node
         speaker.Name = $"{id}";
         speaker.Position = Vector3.Zero;
         _speakerHolder.AddChild(speaker, true);
-        Rpc(nameof(RefreshSpeakerList));
         Rpc(nameof(SetId), id);
+        Rpc(nameof(RefreshSpeakerList));
     }
     private void RemovePlayer(long id) 
     {

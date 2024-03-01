@@ -21,4 +21,8 @@ public partial class Speaker : CharacterBody3D
     {
         _voiceInstance.IsRecording = false;
     }
+    public void SetIsPositional(bool isPositional)
+    {
+        _voiceInstance.IsPositional = isPositional;
+    }
 }

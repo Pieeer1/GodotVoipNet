@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=3 uid="uid://dgoxtdwl5pxv3"]
+
+[ext_resource type="Script" path="res://Example/Scenes/UI/Vector3Display.cs" id="1_xlu53"]
+
+[node name="Vector3Display" type="HBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_xlu53")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+
+[node name="XEdit" type="LineEdit" parent="."]
+layout_mode = 2
+
+[node name="YEdit" type="LineEdit" parent="."]
+layout_mode = 2
+
+[node name="ZEdit" type="LineEdit" parent="."]
+layout_mode = 2

@@ -10,7 +10,7 @@ public class VoiceInstanceTests
     {
         VoiceInstance voiceInstance = new VoiceInstance();
         voiceInstance.IsRecording = false;
-        voiceInstance.Speak(new Godot.Collections.Array<Vector2>(new Vector2[] { Vector2.Zero, Vector2.Zero }), 0, 44100);
+        voiceInstance.Speak(new Godot.Collections.Array<Vector2>(new Vector2[] { Vector2.Zero, Vector2.Zero }), 0, Vector3.Zero);
         AssertThat(GetPrivateField<Vector2[]>(voiceInstance, "_receiveBuffer")!.Count() == 2).IsTrue();
         voiceInstance._Process(0.1f);
         AssertThat(GetPrivateField<Vector2[]>(voiceInstance, "_receiveBuffer")!.Count() == 0).IsFalse();
@@ -18,7 +18,10 @@ public class VoiceInstanceTests
     [TestCase]
     public void TestRecordingFrames()
     {
+        Node3D parent = new Node3D();
         VoiceInstance voiceInstance = new VoiceInstance();
+        parent.AddChild(voiceInstance);
+        AddNode(parent);
         voiceInstance.IsRecording = true;
         voiceInstance._Process(0.5d);
         VoiceMic? voiceMic = GetPrivateField<VoiceMic>(voiceInstance, "_voiceMic");
