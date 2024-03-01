@@ -44,6 +44,7 @@ Example:
 | bool      |  `ShouldListen` |          If true, will play microphone data to the instance recording |
 | float      |  `InputThreshold` |    Value above which microhphone data will be sent. < 0 will disable       |
 | float      |  `IsStereo` |    If True, Audio will listen and send from the left and the right respectively       |
+| float      |  `IsPositional` |    If True, Audio will follow the global position of the Node3D Parent of the Voice Instance    |
 
 ### VoiceOrchestrator 
 | Type         | Name | Description |
@@ -52,6 +53,7 @@ Example:
 | bool      |  `ShouldListen` |          If true, will play microphone data to the instance recording |
 | float      |  `InputThreshold` |    Value above which microhphone data will be sent. < 0 will disable       |
 | float      |  `IsStereo` |    If True, Audio will listen and send from the left and the right respectively       |
+| float      |  `IsPositional` |    If True, Audio will follow the global position of the Node3D Parent of the Voice Instance    |
 
 # Contributing
 
