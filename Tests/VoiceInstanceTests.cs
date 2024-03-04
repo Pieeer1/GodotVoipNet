@@ -10,7 +10,7 @@ public class VoiceInstanceTests
     {
         VoiceInstance voiceInstance = new VoiceInstance();
         voiceInstance.IsRecording = false;
-        voiceInstance.Speak(new Godot.Collections.Array<Vector2>(new Vector2[] { Vector2.Zero, Vector2.Zero }), 0, Vector3.Zero);
+        voiceInstance.Speak([Vector2.Zero, Vector2.Zero ], 0, Vector3.Zero);
         AssertThat(GetPrivateField<Vector2[]>(voiceInstance, "_receiveBuffer")!.Count() == 2).IsTrue();
         voiceInstance._Process(0.1f);
         AssertThat(GetPrivateField<Vector2[]>(voiceInstance, "_receiveBuffer")!.Count() == 0).IsFalse();
